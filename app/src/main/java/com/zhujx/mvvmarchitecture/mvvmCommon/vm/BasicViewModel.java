@@ -1,4 +1,4 @@
-package com.zhujx.mvvmarchitecture.mvvmCommon.VM;
+package com.zhujx.mvvmarchitecture.mvvmCommon.vm;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

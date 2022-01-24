@@ -1,14 +1,11 @@
-package com.zhujx.mvvmarchitecture.mvvmCommon.View;
+package com.zhujx.mvvmarchitecture.mvvmCommon.view;
 
 import android.app.Activity;
 import android.content.Context;
 
 import com.zhujx.mvvmarchitecture.mvvmCommon.Interface.INetworkScope;
 
-/**
- * 默认的网络请求loading实现
- * zhujx 2022/01/19
- */
+
 public class DefaultLoading implements INetworkScope {
     private String indicator = null;
 

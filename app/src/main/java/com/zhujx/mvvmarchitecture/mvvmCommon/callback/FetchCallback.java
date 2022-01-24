@@ -1,9 +1,9 @@
-package com.zhujx.mvvmarchitecture.mvvmCommon.Callback;
+package com.zhujx.mvvmarchitecture.mvvmCommon.callback;
 
 import com.qiyukf.common.utils.system.NetworkUtil;
 import com.qiyukf.common.utils.system.ToastUtil;
-import com.qiyukf.desk.Base.mvvmCommon.Interface.IFetchDataCb;
-import com.qiyukf.desk.Base.mvvmCommon.VM.BasicViewModel;
+import com.qiyukf.desk.base.mvvmCommon.Interface.IFetchDataCb;
+import com.qiyukf.desk.base.mvvmCommon.vm.BasicViewModel;
 
 /**
  * Created by zhujx on 2022-1-18
@@ -30,6 +30,13 @@ public abstract class FetchCallback<T> implements IFetchDataCb<T> {
     public void onFetchError(Throwable t) { // 请求异常，无网络状态下，展示通用的无网络页面布局
         if (!NetworkUtil.isNetAvailable() && this.vm != null) {
             this.vm.getNetWorkError().setValue(true);
+        }
+    }
+
+    @Override
+    public void onFinish() { // 统一处理loading消失
+        if (vm.getShowLoading().getValue() == true) {
+            vm.getShowLoading().setValue(false);
         }
     }
 }

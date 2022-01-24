@@ -1,22 +1,21 @@
-package com.zhujx.mvvmarchitecture.mvvmCommon.Network;
-
-import android.app.Activity;
+package com.qiyukf.desk.base.mvvmCommon.network;
 import android.content.Context;
 
-import com.zhujx.mvvmarchitecture.mvvmCommon.Callback.ActivityWrapCallback;
-import com.zhujx.mvvmarchitecture.mvvmCommon.Interface.IFetchDataCb;
-import com.zhujx.mvvmarchitecture.mvvmCommon.Interface.INetApi;
 import com.zhujx.mvvmarchitecture.mvvmCommon.Interface.INetworkScope;
-import com.zhujx.mvvmarchitecture.mvvmCommon.View.DefaultLoading;
+import com.zhujx.mvvmarchitecture.mvvmCommon.callback.WrapNetCallback;
+import com.zhujx.mvvmarchitecture.mvvmCommon.view.DefaultLoading;
 
-import retrofit2.Call;
 
+/**
+ * 代码留着，先弃用
+ * @param <T>
+ */
 public class NetworkManage<T> {
     private Context mcontext;
     private boolean showLoading = false;
-    private INetApi apiInstance;
+    private QiyukfApi apiInstance;
     private Class<? extends INetworkScope> scopeConfig;
-    private ActivityWrapCallback<T> callback;
+    private WrapNetCallback<T> callback;
     private INetworkScope networkLoadingScope;
 
     public NetworkManage(Context mcontext) {
@@ -24,11 +23,11 @@ public class NetworkManage<T> {
         this.scopeConfig = DefaultLoading.class;
     }
 
-    public INetApi getApiInstance() {
+    public QiyukfApi getApiInstance() {
         if (apiInstance == null) {
             synchronized (NetworkManage.class) {
                 if (apiInstance == null) {
-                    apiInstance = RPCApiFactory.create(INetApi.class);
+                    apiInstance = RPCApiFactory.create(QiyukfApi.class);
                 }
             }
         }
@@ -59,35 +58,35 @@ public class NetworkManage<T> {
         return this;
     }
 
-    public ActivityWrapCallback<T> wrapAndSetCallBack(IFetchDataCb mfetchDataCb) {
-        callback = new ActivityWrapCallback<T>((Activity) mcontext) {
-            @Override
-            public void onErrorCode(int code, String msg) {
-                mfetchDataCb.onErrorCode(code, msg);
-            }
-
-            @Override
-            public void onResult(T data) {
-                mfetchDataCb.onResult(data);
-            }
-
-            @Override
-            public void onFetchError(Throwable t) {
-                mfetchDataCb.onFetchError(t);
-            }
-
-            @Override
-            public void onFinish(Call<ApiBase<T>> call, boolean hasError) {
-                super.onFinish(call, hasError);
-                if (networkLoadingScope != null) {
-                    networkLoadingScope.onEnd(mcontext, !hasError);
-                }
-            }
-        };
+    public WrapNetCallback<T> wrapAndSetCallBack(IFetchDataCb mfetchDataCb) {
+//        callback = new WrapNetCallback<T>((Activity) mcontext) {
+//            @Override
+//            public void onErrorCode(int code, String msg) {
+//                mfetchDataCb.onErrorCode(code, msg);
+//            }
+//
+//            @Override
+//            public void onResult(T data) {
+//                mfetchDataCb.onResult(data);
+//            }
+//
+//            @Override
+//            public void onFetchError(Throwable t) {
+//                mfetchDataCb.onFetchError(t);
+//            }
+//
+//            @Override
+//            public void onFinish(Call<QiyukfApiBase<T>> call, boolean hasError) {
+//                super.onFinish(call, hasError);
+//                if (networkLoadingScope != null) {
+//                    networkLoadingScope.onEnd(mcontext, !hasError);
+//                }
+//            }
+//        };
         return callback;
     }
 
-    public INetApi build() {
+    public QiyukfApi build() {
         if (showLoading && this.scopeConfig != null) {
             try {
                 networkLoadingScope = this.scopeConfig.newInstance();

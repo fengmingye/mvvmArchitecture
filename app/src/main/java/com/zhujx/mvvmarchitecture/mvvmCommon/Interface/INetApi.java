@@ -3,7 +3,7 @@ package com.zhujx.mvvmarchitecture.mvvmCommon.Interface;
 
 
 
-import com.zhujx.mvvmarchitecture.mvvmCommon.Network.ApiBase;
+import com.zhujx.mvvmarchitecture.mvvmCommon.network.ApiBase;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;

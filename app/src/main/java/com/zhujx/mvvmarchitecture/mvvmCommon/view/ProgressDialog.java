@@ -1,4 +1,4 @@
-package com.zhujx.mvvmarchitecture.mvvmCommon.View;
+package com.zhujx.mvvmarchitecture.mvvmCommon.view;
 
 import android.app.Dialog;
 import android.content.Context;

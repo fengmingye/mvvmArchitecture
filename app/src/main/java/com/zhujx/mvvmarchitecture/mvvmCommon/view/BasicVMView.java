@@ -1,13 +1,18 @@
-package com.zhujx.mvvmarchitecture.mvvmCommon.View;
+package com.zhujx.mvvmarchitecture.mvvmCommon.view;
 
 import android.content.Context;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.zhujx.mvvmarchitecture.mvvmCommon.VM.BasicViewModel;
+import com.zhujx.mvvmarchitecture.mvvmCommon.vm.BasicViewModel;
 
 
+/**
+ * 弃用
+ * @param <T>
+ * @param <M>
+ */
 public abstract class BasicVMView<T extends ViewDataBinding, M extends BasicViewModel> {
     private Context mcontext;
     private LifecycleOwner lifecycleOwner;

@@ -1,4 +1,4 @@
-package com.zhujx.mvvmarchitecture.mvvmCommon.Network;
+package com.zhujx.mvvmarchitecture.mvvmCommon.network;
 
 
 import java.io.Serializable;

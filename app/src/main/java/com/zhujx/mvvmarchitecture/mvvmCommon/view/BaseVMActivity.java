@@ -1,4 +1,4 @@
-package com.zhujx.mvvmarchitecture.mvvmCommon.View;
+package com.zhujx.mvvmarchitecture.mvvmCommon.view;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -11,15 +11,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
+
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.zhujx.mvvmarchitecture.MVVMApplication;
-import com.zhujx.mvvmarchitecture.R;
-import com.zhujx.mvvmarchitecture.mvvmCommon.VM.BasicViewModel;
-import com.zhujx.mvvmarchitecture.mvvmCommon.config.DataBindingConfig;
-import com.zhujx.mvvmarchitecture.mvvmCommon.utils.ScreenUtils;
 
+import com.zhujx.mvvmarchitecture.mvvmCommon.config.DataBindingConfig;
+import com.zhujx.mvvmarchitecture.mvvmCommon.vm.BasicViewModel;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 /**
  * * created by zhujx on 2022/1/22
@@ -33,11 +34,11 @@ import com.zhujx.mvvmarchitecture.mvvmCommon.utils.ScreenUtils;
  * inicClick点击事件
  * initObserve监听
  */
-public abstract class BaseVMActivity<M extends BasicViewModel> extends AppCompatActivity {
+public abstract class BaseVMActivity<M extends BasicViewModel, B extends ViewDataBinding> extends AppCompatActivity {
     ViewModelProvider mApplicationProvider;
     ViewModelProvider mActivityProvider;
-    private ViewDataBinding mBinding;
-    private M mviewModel;
+    protected B mBinding;
+    protected M mViewModel;
     private ProgressDialog mProgress;
     private View netWorkErrorView;
     private String TAG = "BaseVMActivity";
@@ -66,20 +67,38 @@ public abstract class BaseVMActivity<M extends BasicViewModel> extends AppCompat
      */
     protected <T extends ViewModel> T getApplicationScopeViewModel(@NonNull Class<T> modelClass) {
         if (mApplicationProvider == null) {
-            mApplicationProvider = new ViewModelProvider((MVVMApplication) this.getApplicationContext());
+            mApplicationProvider = new ViewModelProvider((DeskApplication) this.getApplicationContext());
         }
         return mApplicationProvider.get(modelClass);
     }
 
 
-    public ViewDataBinding getmBinding() {
+    public B getmBinding() {
         return mBinding;
     }
 
-    protected abstract M initViewModel();
+    protected M initViewModel() {
+        if (mViewModel == null) {
+            Class modelClass;
+            Type type = getClass().getGenericSuperclass();
+            if (type instanceof ParameterizedType) {
+                modelClass = (Class) ((ParameterizedType) type).getActualTypeArguments()[0];
+            } else {
+                //如果沒有指定泛型參數，則默認使用BaseViewModel
+                modelClass = BasicViewModel.class;
+            }
+            return (M) getActivityViewModel(modelClass);
+        }
+        return mViewModel;
+    }
 
-    protected abstract DataBindingConfig getDataBindingConfig();
+    protected abstract int getLayoutId();
 
+    protected DataBindingConfig getDataBindingConfig() {
+        return new DataBindingConfig(getLayoutId());
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -92,7 +111,7 @@ public abstract class BaseVMActivity<M extends BasicViewModel> extends AppCompat
 
         initBaseView();
 
-        mviewModel = this.initViewModel();
+        mViewModel = this.initViewModel();
 
         this.initView();
 
@@ -102,7 +121,6 @@ public abstract class BaseVMActivity<M extends BasicViewModel> extends AppCompat
 
     }
 
-
     protected abstract void initView();
 
     protected abstract void initClick();
@@ -111,6 +129,7 @@ public abstract class BaseVMActivity<M extends BasicViewModel> extends AppCompat
         this.mProgress = new ProgressDialog(this);
     }
 
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         this.mBinding.unbind();
@@ -161,7 +180,7 @@ public abstract class BaseVMActivity<M extends BasicViewModel> extends AppCompat
             ViewGroup contentParent = getWindow().getDecorView().findViewById(android.R.id.content);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.gravity = Gravity.CENTER;
-            params.topMargin = ScreenUtils.getStatusBarHeight(this); // 解决无网络页面被statusBar遮挡的问题
+            params.topMargin = ScreenUtils.getStatusBarHeight(); // 解决无网络页面被statusBar遮挡的问题
             netWorkErrorView.setLayoutParams(params);
             contentParent.addView(netWorkErrorView);
         }
@@ -177,21 +196,21 @@ public abstract class BaseVMActivity<M extends BasicViewModel> extends AppCompat
                 ((ViewGroup) netWorkErrorView.getParent()).removeView(netWorkErrorView);
             }
         } catch (Exception e) {
-//            Log.i(TAG, "networkErrorViewDismiss error");
+            NimLog.i(TAG, "networkErrorViewDismiss error");
             e.printStackTrace();
         }
     }
 
     protected void initObserve() {
-        if (mviewModel != null) {
-            mviewModel.getShowLoading().observe(this, aBoolean -> {
+        if (mViewModel != null) {
+            mViewModel.getShowLoading().observe(this, aBoolean -> {
                 if (aBoolean) {
                     showDialog();
                 } else {
                     loadingDisMiss();
                 }
             });
-            mviewModel.getNetWorkError().observe(this, show -> {
+            mViewModel.getNetWorkError().observe(this, show -> {
                 if (show) {
                     showNetworkErrorView();
                 } else {
@@ -201,4 +220,7 @@ public abstract class BaseVMActivity<M extends BasicViewModel> extends AppCompat
         }
     }
 
+    public M getViewModel() {
+        return (M) mViewModel;
+    }
 }

@@ -1,4 +1,4 @@
-package com.zhujx.mvvmarchitecture.mvvmCommon.Callback;
+package com.zhujx.mvvmarchitecture.mvvmCommon.callback;
 
 import android.app.Activity;
 

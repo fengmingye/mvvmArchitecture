@@ -6,4 +6,6 @@ public interface IFetchDataCb<T> {
     void onErrorCode(int code, String msg); //网络请求成功，但是code!=200，即接口业务异常
 
     void onFetchError(Throwable t); // 网络请求异常
+
+    void onFinish(); //网络最后会走的回调
 }
