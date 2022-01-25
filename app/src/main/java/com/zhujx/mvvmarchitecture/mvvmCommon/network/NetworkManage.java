@@ -1,6 +1,7 @@
-package com.qiyukf.desk.base.mvvmCommon.network;
+package com.zhujx.mvvmarchitecture.mvvmCommon.network;
 import android.content.Context;
 
+import com.zhujx.mvvmarchitecture.mvvmCommon.Interface.IFetchDataCb;
 import com.zhujx.mvvmarchitecture.mvvmCommon.Interface.INetworkScope;
 import com.zhujx.mvvmarchitecture.mvvmCommon.callback.WrapNetCallback;
 import com.zhujx.mvvmarchitecture.mvvmCommon.view.DefaultLoading;

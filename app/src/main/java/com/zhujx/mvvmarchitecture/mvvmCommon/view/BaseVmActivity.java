@@ -11,20 +11,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
-
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 
 import com.zhujx.mvvmarchitecture.mvvmCommon.config.DataBindingConfig;
+import com.zhujx.mvvmarchitecture.mvvmCommon.utils.ScreenUtils;
 import com.zhujx.mvvmarchitecture.mvvmCommon.vm.BasicViewModel;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-
-/**
- * * created by zhujx on 2022/1/22
- */
 
 /**
  * 执行顺序 super.OnCreate->getDataBindingConfig->initViewModel->initView->initObserve->initClick
@@ -33,8 +29,10 @@ import java.lang.reflect.Type;
  * initView页面布局以及相关数据初始化，数据获取
  * inicClick点击事件
  * initObserve监听
+ *
+ * @author zhujianxin on 2022/1/22
  */
-public abstract class BaseVMActivity<M extends BasicViewModel, B extends ViewDataBinding> extends AppCompatActivity {
+public abstract class BaseVmActivity<M extends BasicViewModel, B extends ViewDataBinding> extends AppCompatActivity {
     ViewModelProvider mApplicationProvider;
     ViewModelProvider mActivityProvider;
     protected B mBinding;
@@ -67,7 +65,7 @@ public abstract class BaseVMActivity<M extends BasicViewModel, B extends ViewDat
      */
     protected <T extends ViewModel> T getApplicationScopeViewModel(@NonNull Class<T> modelClass) {
         if (mApplicationProvider == null) {
-            mApplicationProvider = new ViewModelProvider((DeskApplication) this.getApplicationContext());
+            mApplicationProvider = new ViewModelProvider(this.getApplicationContext());
         }
         return mApplicationProvider.get(modelClass);
     }
@@ -119,6 +117,10 @@ public abstract class BaseVMActivity<M extends BasicViewModel, B extends ViewDat
 
         this.initClick();
 
+        if (mViewModel != null) {
+            // 页面获取数据 - 渲染页面 的入口
+            mViewModel.fetchData();
+        }
     }
 
     protected abstract void initView();
@@ -196,7 +198,6 @@ public abstract class BaseVMActivity<M extends BasicViewModel, B extends ViewDat
                 ((ViewGroup) netWorkErrorView.getParent()).removeView(netWorkErrorView);
             }
         } catch (Exception e) {
-            NimLog.i(TAG, "networkErrorViewDismiss error");
             e.printStackTrace();
         }
     }

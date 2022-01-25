@@ -6,8 +6,9 @@ import androidx.lifecycle.ViewModel;
 
 /**
  * 主要是封装通用事件， 如loading出现/消失
+ * @author zhujianxin
  */
-public class BasicViewModel extends ViewModel {
+public abstract class BasicViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> showLoading;
 
@@ -19,7 +20,12 @@ public class BasicViewModel extends ViewModel {
     }
 
     public void setLoadingValue(boolean showLoading) {
-        this.showLoading.setValue(showLoading);
+        /**
+         * 增加边界条件处理,应对多个网络请求设置多次loading的情况
+         */
+        if (this.showLoading.getValue() == null || showLoading != this.showLoading.getValue()) {
+            this.showLoading.setValue(showLoading);
+        }
     }
 
     public MutableLiveData<Boolean> getShowLoading() {
@@ -27,10 +33,14 @@ public class BasicViewModel extends ViewModel {
     }
 
     public void showNetworkError(boolean show) {
-        this.netWorkError.setValue(show);
+        if (this.netWorkError.getValue() == null || show != this.netWorkError.getValue()) {
+            this.netWorkError.setValue(show);
+        }
     }
 
     public MutableLiveData<Boolean> getNetWorkError() {
         return netWorkError;
     }
+
+    public abstract void fetchData();
 }

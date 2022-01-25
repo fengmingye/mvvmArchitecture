@@ -3,9 +3,11 @@ package com.zhujx.mvvmarchitecture.mvvmCommon.view;
 import android.app.Activity;
 import android.content.Context;
 
-import com.zhujx.mvvmarchitecture.mvvmCommon.Interface.INetworkScope;
+import com.qiyukf.desk.base.mvvmCommon.Interface.INetworkScope;
 
-
+/**
+ * @author zhujianxin
+ */
 public class DefaultLoading implements INetworkScope {
     private String indicator = null;
 

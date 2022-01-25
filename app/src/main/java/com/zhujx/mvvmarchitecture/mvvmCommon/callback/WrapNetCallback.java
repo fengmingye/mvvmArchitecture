@@ -1,13 +1,8 @@
 package com.zhujx.mvvmarchitecture.mvvmCommon.callback;
 
-import com.qiyukf.logmodule.NimLog;
-import com.qiyukf.rpccommonlib.callback.BaseCallback;
-import com.qiyukf.rpcinterface.response.QiyukfApiBase;
 
 import org.json.JSONException;
 
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by zhujx on 2022-01-18
@@ -24,17 +19,14 @@ public abstract class WrapNetCallback<T> extends BaseCallback<QiyukfApiBase<T>> 
         super.onResponse(call, response);
         NimLog.d("ActivityCallback onResponse, call => {}" + call, "response => {}" + response);
         if (call.isCanceled()) {
-            NimLog.i(ACTIVITYCALLBACKTAG + "call isCanceled, stop do more,url={}", call.request().url().toString());
             return;
         }
         if (response == null || !response.isSuccessful()) {
-            NimLog.i(ACTIVITYCALLBACKTAG + "showServerErrorMsg=", call.request().url().toString());
             showServerErrorMsg();
             onFinish(call, true);
             return;
         }
         if (response.body() == null) {
-            NimLog.i("showJsonParseErrorMsg=>{}", call.request().url().toString());
             showJsonParseErrorMsg();
             onFinish(call, true);
         }

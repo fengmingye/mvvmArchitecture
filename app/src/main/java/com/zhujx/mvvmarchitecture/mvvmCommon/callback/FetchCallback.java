@@ -4,6 +4,7 @@ import com.qiyukf.common.utils.system.NetworkUtil;
 import com.qiyukf.common.utils.system.ToastUtil;
 import com.qiyukf.desk.base.mvvmCommon.Interface.IFetchDataCb;
 import com.qiyukf.desk.base.mvvmCommon.vm.BasicViewModel;
+import com.zhujx.mvvmarchitecture.mvvmCommon.vm.BasicViewModel;
 
 /**
  * Created by zhujx on 2022-1-18
