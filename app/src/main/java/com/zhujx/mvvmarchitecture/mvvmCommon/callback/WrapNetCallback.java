@@ -1,23 +1,27 @@
 package com.zhujx.mvvmarchitecture.mvvmCommon.callback;
 
 
+import com.zhujx.mvvmarchitecture.mvvmCommon.network.ApiBase;
+
 import org.json.JSONException;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 /**
  * Created by zhujx on 2022-01-18
  * Describe: http 请求 Activity 中使用的 Callback
  */
-public abstract class WrapNetCallback<T> extends BaseCallback<QiyukfApiBase<T>> {
+public abstract class WrapNetCallback<T> extends BaseCallback<ApiBase<T>> {
 
     private final int codeSuccess = 200;
 
     private static final String ACTIVITYCALLBACKTAG = "WrapNetCallback";
 
     @Override
-    public void onResponse(Call<QiyukfApiBase<T>> call, Response<QiyukfApiBase<T>> response) {
+    public void onResponse(Call<ApiBase<T>> call, Response<ApiBase<T>> response) {
         super.onResponse(call, response);
-        NimLog.d("ActivityCallback onResponse, call => {}" + call, "response => {}" + response);
         if (call.isCanceled()) {
             return;
         }
@@ -43,10 +47,8 @@ public abstract class WrapNetCallback<T> extends BaseCallback<QiyukfApiBase<T>> 
     }
 
     @Override
-    public void onFailure(Call<QiyukfApiBase<T>> call, Throwable t) {
-        NimLog.w("WrapNetCallback onFailure", t);
+    public void onFailure(Call<ApiBase<T>> call, Throwable t) {
         if (call.isCanceled()) {
-            NimLog.i(ACTIVITYCALLBACKTAG + "call isCanceled, stop do more,url={}", call.request().url().toString());
             onFinish(call, false);
             return;
         }
@@ -57,12 +59,10 @@ public abstract class WrapNetCallback<T> extends BaseCallback<QiyukfApiBase<T>> 
         }
         if (t != null) {
             if (t.getCause() instanceof JSONException) {
-                NimLog.d("showJsonParseErrorMsg=>{}", call.request().url().toString());
                 showJsonParseErrorMsg();
                 return;
             }
         }
-        NimLog.d("showNetworkErrorMsg=>{}", call.request().url().toString());
         showNetWorkError();
     }
 
@@ -71,13 +71,13 @@ public abstract class WrapNetCallback<T> extends BaseCallback<QiyukfApiBase<T>> 
     public abstract void onResult(T data);
 
 
-    private boolean judgeResponse(QiyukfApiBase<T> response) {
+    private boolean judgeResponse(ApiBase<T> response) {
         return response.getCode() == codeSuccess;
     }
 
     public abstract void onFetchError(Throwable t);
 
-    public void onFinish(Call<QiyukfApiBase<T>> call, boolean hasError) {
+    public void onFinish(Call<ApiBase<T>> call, boolean hasError) {
 
     }
 }

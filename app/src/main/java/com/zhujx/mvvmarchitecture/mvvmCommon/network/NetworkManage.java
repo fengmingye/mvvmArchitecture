@@ -1,7 +1,9 @@
 package com.zhujx.mvvmarchitecture.mvvmCommon.network;
+
 import android.content.Context;
 
 import com.zhujx.mvvmarchitecture.mvvmCommon.Interface.IFetchDataCb;
+import com.zhujx.mvvmarchitecture.mvvmCommon.Interface.INetApi;
 import com.zhujx.mvvmarchitecture.mvvmCommon.Interface.INetworkScope;
 import com.zhujx.mvvmarchitecture.mvvmCommon.callback.WrapNetCallback;
 import com.zhujx.mvvmarchitecture.mvvmCommon.view.DefaultLoading;
@@ -14,21 +16,21 @@ import com.zhujx.mvvmarchitecture.mvvmCommon.view.DefaultLoading;
 public class NetworkManage<T> {
     private Context mcontext;
     private boolean showLoading = false;
-    private QiyukfApi apiInstance;
+    private ApiBase apiInstance;
     private Class<? extends INetworkScope> scopeConfig;
     private WrapNetCallback<T> callback;
     private INetworkScope networkLoadingScope;
 
     public NetworkManage(Context mcontext) {
         this.mcontext = mcontext;
-        this.scopeConfig = DefaultLoading.class;
+        this.scopeConfig = (Class<? extends INetworkScope>) DefaultLoading.class;
     }
 
-    public QiyukfApi getApiInstance() {
+    public ApiBase getApiInstance() {
         if (apiInstance == null) {
             synchronized (NetworkManage.class) {
                 if (apiInstance == null) {
-                    apiInstance = RPCApiFactory.create(QiyukfApi.class);
+//                    apiInstance = ApiFactory.create(INetApi.class); // 这里自己实现APiInstance，可以参考Retrofit + okhttp
                 }
             }
         }
@@ -87,7 +89,7 @@ public class NetworkManage<T> {
         return callback;
     }
 
-    public QiyukfApi build() {
+    public ApiBase build() {
         if (showLoading && this.scopeConfig != null) {
             try {
                 networkLoadingScope = this.scopeConfig.newInstance();

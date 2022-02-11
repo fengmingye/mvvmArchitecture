@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 
+import com.zhujx.mvvmarchitecture.MvvmApplication;
+import com.zhujx.mvvmarchitecture.R;
 import com.zhujx.mvvmarchitecture.mvvmCommon.config.DataBindingConfig;
 import com.zhujx.mvvmarchitecture.mvvmCommon.utils.ScreenUtils;
 import com.zhujx.mvvmarchitecture.mvvmCommon.vm.BasicViewModel;
@@ -65,7 +67,7 @@ public abstract class BaseVmActivity<M extends BasicViewModel, B extends ViewDat
      */
     protected <T extends ViewModel> T getApplicationScopeViewModel(@NonNull Class<T> modelClass) {
         if (mApplicationProvider == null) {
-            mApplicationProvider = new ViewModelProvider(this.getApplicationContext());
+            mApplicationProvider = new ViewModelProvider((MvvmApplication)this.getApplicationContext());
         }
         return mApplicationProvider.get(modelClass);
     }
@@ -182,7 +184,7 @@ public abstract class BaseVmActivity<M extends BasicViewModel, B extends ViewDat
             ViewGroup contentParent = getWindow().getDecorView().findViewById(android.R.id.content);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.gravity = Gravity.CENTER;
-            params.topMargin = ScreenUtils.getStatusBarHeight(); // 解决无网络页面被statusBar遮挡的问题
+            params.topMargin = ScreenUtils.getStatusBarHeight(this); // 解决无网络页面被statusBar遮挡的问题
             netWorkErrorView.setLayoutParams(params);
             contentParent.addView(netWorkErrorView);
         }
