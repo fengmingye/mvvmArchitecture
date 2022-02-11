@@ -10,4 +10,4 @@ BaseVmActivity，BasicViewModel,分别是Activity，ViewModel的基类，他们�
 想了解更多可以关注公众号： “你丫才IT民工”
 
 扫以下二维码可以直达：
-https://github.com/fengmingye/mvvmArchitecture/blob/master/img/qrcode_for_gongzhonghao.jpg
+![image](https://github.com/fengmingye/mvvmArchitecture/blob/master/img/qrcode_for_gongzhonghao.jpg)
